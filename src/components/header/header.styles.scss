@@ -1,0 +1,39 @@
+@import '../../constants.scss';
+
+.header {
+
+  .app-header {
+    display: flex;
+    padding: $gutter-size--large;
+    position: relative;
+
+    .hamburger-icon {
+      width: 25px;
+      position: absolute;
+      top: 50%;
+      left: 20px;
+      -webkit-transform: translate(-50%, -50%);
+      -moz-transform: translate(-50%, -50%);
+      -o-transform: translate(-50%, -50%); 
+      transform: translate(-50%, -50%);
+      
+      svg {
+        width: 25px;
+        height: 25px;
+      } 
+    }
+  
+    .logo-container {
+      width: 100%;
+      padding-left: 40px;
+      text-align: center;
+
+      img {
+        max-height: 45px;
+      }
+    }
+    
+  
+    border-bottom: $border-standard;
+  }
+}
