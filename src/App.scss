@@ -1,5 +1,9 @@
 @import './constants.scss';
 
+body > * {
+  font-family: 'Roboto', sans-serif;
+}
+
 .button {
   box-sizing: border-box;
   padding: 12px;
@@ -14,6 +18,8 @@
 
 h2 {
   &.h6 {
-    font-size: 24px;
+    margin-left: 20px;
+    font-size: 3.5em;
+    color: $bold-text-color;
   }
 }

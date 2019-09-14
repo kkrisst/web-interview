@@ -1,10 +1,11 @@
 @import '../../constants.scss';
 
 .user-info {
-  margin: $gutter-size--large;
+  margin: $gutter-size--large * 2;
   border-bottom: $border-standard;
   position: relative;
-  color: $secondary-light;
+  color: $bold-text-color;
+  padding-bottom: 12px;
 
   .avatar {
     display: inline-block;
@@ -15,10 +16,10 @@
 
   .name {
     display: inline-block;
-    font-size: 2em;
+    font-size: 1.5em;
     position: absolute;
     top: 50%;
-    margin-left: 70px;
+    margin-left: 76px;
     -webkit-transform: translate(-50%, -50%);
     -moz-transform: translate(-50%, -50%);
     -o-transform: translate(-50%, -50%); 
