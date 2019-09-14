@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
-import logo from './logo.png'
-import { API_ENDPOINT } from './config'
+import Header from './components/header/header.component.jsx'
 
+import { API_ENDPOINT } from './config'
 import './App.scss'
 
 class App extends Component {
@@ -51,10 +51,8 @@ class App extends Component {
 
     return (
       <div className="app">
+        <Header />
         <h2 className="h6">New appointment</h2>
-        <div className="app-header">
-          <img src={logo} className="app-logo" alt="Babylon Health" />
-        </div>
         <div style={{ maxWidth: 600, margin: '24px auto' }}>
           <div
             className="button"
