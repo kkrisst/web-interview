@@ -17,11 +17,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    document
-      .querySelectorAll('button')
-      .querySelectorAll('[id=GP-button]')
-      .attachEventHandler('click', this.onClick)
-
     fetch(`${API_ENDPOINT}/availableSlots`)
       .then(res => res.json())
       .then(json => {
@@ -32,8 +27,8 @@ class App extends Component {
       })
   }
 
-  onClick() {
-    this.setState({ selectedAppointmentType: 'gp' })
+  onAppointmentTypeChange = appointmentType => {
+    this.setState({ selectedAppointmentType: appointmentType })
   }
 
   render() {
@@ -61,30 +56,28 @@ class App extends Component {
           <img src={logo} className="app-logo" alt="Babylon Health" />
         </div>
         <div style={{ maxWidth: 600, margin: '24px auto' }}>
-          <div className="button" id="GP-button">
+          <div
+            className="button"
+            id="GP-button"
+            onClick={() => this.onAppointmentTypeChange('gp')}
+          >
             GP
           </div>
           <div
             className="button"
-            onClick={e => {
-              this.setState({ selectedAppointmentType: 'Therapist' })
-            }}
+            onClick={() => this.onAppointmentTypeChange('Therapist')}
           >
             Therapist
           </div>
           <div
             className="button"
-            onClick={e => {
-              this.setState({ selectedAppointmentType: 'Physio' })
-            }}
+            onClick={() => this.onAppointmentTypeChange('Physio')}
           >
             Physio
           </div>
           <div
             className="button"
-            onClick={e => {
-              this.setState({ selectedAppointmentType: 'specialist' })
-            }}
+            onClick={() => this.onAppointmentTypeChange('specialist')}
           >
             Specialist
           </div>
@@ -92,6 +85,7 @@ class App extends Component {
             <strong>Appointments</strong>
             {slots.map(slot => (
               <li
+                key={slot.id}
                 className="appointment-button"
                 onClick={() => {
                   this.setState({ selectedAppointment: slot })
