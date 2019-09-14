@@ -1,0 +1,36 @@
+@import '../../constants.scss';
+
+.user-info {
+  margin: $gutter-size--large;
+  border-bottom: $border-standard;
+  position: relative;
+  color: $secondary-light;
+
+  .avatar {
+    display: inline-block;
+    width: 10vw;
+    max-width: 100px;
+    min-width: 60px;
+  }
+
+  .name {
+    display: inline-block;
+    font-size: 2em;
+    position: absolute;
+    top: 50%;
+    margin-left: 70px;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%); 
+    transform: translate(-50%, -50%);
+
+    .first-name,
+    .last-name {
+      display: inline-block;
+    }
+
+    .first-name {
+      margin-right: 10px;
+    }
+  }
+}

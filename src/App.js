@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import Header from './components/header/header.component.jsx'
+import UserInfo from './components/user-info/user-info.component.jsx'
 
 import { API_ENDPOINT } from './config'
 import './App.scss'
@@ -22,8 +23,8 @@ class App extends Component {
       .then(json => {
         this.setState({ availableSlots: json })
       })
-      .catch(() => {
-        // TODO: Handle error here
+      .catch(err => {
+        console.error(err)
       })
   }
 
@@ -53,6 +54,7 @@ class App extends Component {
       <div className="app">
         <Header />
         <h2 className="h6">New appointment</h2>
+        <UserInfo />
         <div style={{ maxWidth: 600, margin: '24px auto' }}>
           <div
             className="button"

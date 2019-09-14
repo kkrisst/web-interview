@@ -6,6 +6,7 @@
     display: flex;
     padding: $gutter-size--large;
     position: relative;
+    border-bottom: $border-standard;
 
     .hamburger-icon {
       width: 25px;
@@ -32,8 +33,5 @@
         max-height: 45px;
       }
     }
-    
-  
-    border-bottom: $border-standard;
   }
 }
