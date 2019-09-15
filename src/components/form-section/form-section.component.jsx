@@ -12,7 +12,7 @@ const FormSection = ({ children, title, iconName }) => {
         <div className='icon'>
           <FontAwesomeIcon icon={iconName} />
         </div>
-        {title}
+        <div className='title'>{title}</div>
       </div>
       {children}
     </div>
