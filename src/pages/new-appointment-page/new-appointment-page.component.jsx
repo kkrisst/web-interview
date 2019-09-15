@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
 import UserInfo from '../../components/user-info/user-info.component.jsx';
+import FormSection from '../../components/form-section/form-section.component.jsx';
 import SelectableButton from '../../components/selectable-button/selectable-button.component.jsx';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { API_ENDPOINT } from '../../config'
 import './new-appointment-page.styles.scss';
 
@@ -12,7 +12,7 @@ class NewAppointmentPage extends Component {
     super(props)
 
     this.state = {
-      userId: 1, // TODO
+      userId: 1,
       availableSlots: [],
       filteredSlots: [],
       availableAppointmentTypes: [],
@@ -151,7 +151,6 @@ class NewAppointmentPage extends Component {
 
     const todayDate = new Date();
 
-    // TODO handle the case when 0 slots are available
     return (
       <div className='new-appointment-page'>
 
@@ -159,14 +158,8 @@ class NewAppointmentPage extends Component {
         <UserInfo userId={userId}/>
         <div className="appointment-form">
 
-          <div className='form-block'>
-            <div className='block-header'>
-              <div className='block-icon'>
-                <FontAwesomeIcon icon="stethoscope" />
-              </div>
-              Consultant Type
-            </div>
-            <div className='block-buttons'>
+          <FormSection title='Consultant Type' iconName='stethoscope'>
+          <div className='block-buttons'>
               <SelectableButton
                 label='GP'
                 selected={consultantType === 'gp'}
@@ -183,15 +176,9 @@ class NewAppointmentPage extends Component {
                 handleSelect={() => this.onConsultantTypeChange('specialist')}
               />
             </div>
-          </div>
+          </FormSection>
 
-          <div className='form-block'>
-            <div className='block-header'>
-              <div className='block-icon'>
-                <FontAwesomeIcon icon="clock" />
-              </div>
-              Date & Time
-            </div>
+          <FormSection title='Date & Time' iconName='clock'>
             {
               filteredSlots.length === 0
               ? (<div className='empty-block'>There are no available dates for the selected consultant type.</div>)
@@ -223,15 +210,9 @@ class NewAppointmentPage extends Component {
                 </div>
               )
             }
-          </div>
+          </FormSection>
 
-          <div className='form-block'>
-            <div className='block-header'>
-              <div className='block-icon'>
-                <FontAwesomeIcon icon="video" />
-              </div>
-              Appointment Type
-            </div>
+          <FormSection title='Appointment Type' iconName='video'>
             {
               userDate === null
               ? (<div className='empty-block'>Please select a Date to see the available appointment types.</div>)
@@ -250,22 +231,16 @@ class NewAppointmentPage extends Component {
                 </div>
               )
             }
-          </div>
+          </FormSection>
 
-          <div className='form-block'>
-            <div className='block-header'>
-              <div className='block-icon'>
-                <FontAwesomeIcon icon="video" />
-              </div>
-              Notes
-            </div>
+          <FormSection title='Notes' iconName='sticky-note'>
             <div className='textarea-wrapper'>
               <textarea
                 placeholder='Describe your symptoms'
                 onChange={(e) => this.onNotesChange(e)}
               />
             </div>
-          </div>
+          </FormSection>
 
           <div className='book-block'>
             <div

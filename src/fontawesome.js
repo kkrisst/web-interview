@@ -5,6 +5,7 @@ import {
   faStethoscope,
   faClock,
   faVideo,
+  faStickyNote,
 } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faBars, faStethoscope, faClock, faVideo)
+library.add(faBars, faStethoscope, faClock, faVideo, faStickyNote)

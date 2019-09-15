@@ -1,0 +1,32 @@
+@import '../../constants.scss';
+
+.form-section {
+  margin: $gutter-size--large * 2;
+  min-height: 80px;
+
+  .section-header {
+    display: flex;
+    color: #000;
+    font-weight: 600;
+    margin-bottom: 20px;
+
+    .icon {
+      color: $icon-color;
+      margin-right: 10px;
+    }
+  }
+
+  .textarea-wrapper {
+    width: 80vw;
+    margin: 10px auto;
+    height: 40vh;
+    border-bottom: $border-standard;
+    
+    textarea {
+      width: 100%;
+      height: 20vh;
+      border: 1px solid #bbb;
+      border-radius: 7px;
+    }
+  }
+}
