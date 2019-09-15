@@ -1,0 +1,21 @@
+@import '../../constants.scss';
+
+.button {
+  box-sizing: border-box;
+  padding: 12px;
+  background-color: $primary-dark;
+  color: $secondary-light;
+  width: calc(25% - 12px);
+  height: 42px;
+  margin-right: 12px;
+  display: inline-block;
+  text-align: center;
+}
+
+h2 {
+  &.h6 {
+    margin-left: 20px;
+    font-size: 3.5em;
+    color: $bold-text-color;
+  }
+}

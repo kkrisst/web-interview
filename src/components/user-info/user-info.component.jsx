@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { API_ENDPOINT } from '../../config'
 
 import './user-info.styles.scss';
 
-class UserInfo extends React.Component {
+class UserInfo extends Component {
   
   constructor(props) {
     super(props)
