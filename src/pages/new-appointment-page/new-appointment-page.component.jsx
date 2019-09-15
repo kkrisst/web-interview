@@ -46,8 +46,55 @@ class NewAppointmentPage extends Component {
     this.setState({ appointmentType })
   }
 
-  onNotesChange = notes => {
+  onNotesChange = event => {
+    const notes = event.target.value;
     this.setState({ notes });
+  }
+
+  sendAppointmentRequest = event => {
+    const { userId, consultantType, appointmentType, userDate, notes } = this.state;
+    const dataToPost = {
+      userId,
+      dateTime: userDate,
+      notes,
+      consultantType: this.translateConsultantType(consultantType),
+      appointmentType
+    };
+
+    fetch(`${API_ENDPOINT}/appointments`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataToPost)
+    })
+      .then(res=>res.json())
+      .then(json => {
+        //console.log(json)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  }
+
+  translateConsultantType = cType => {
+    let translatedCType = '';
+    switch (cType) {
+      case 'gp':
+        translatedCType = 'GP appointment';
+        break;
+      case 'therapist':
+        translatedCType = 'Therapist appointment';
+        break;
+      case 'specialist':
+        translatedCType = 'Specialist appointment';
+        break;
+      default:
+        translatedCType = 'Other type of appointment';
+    }
+
+    return translatedCType;
   }
 
   render() {
@@ -78,9 +125,11 @@ class NewAppointmentPage extends Component {
     // TODO handle the case when 0 slots are available
     return (
       <div className='new-appointment-page'>
+        
         <h2 className="h6">New appointment</h2>
         <UserInfo />
         <div className="appointment-form">
+
           <div className='form-block'>
             <div className='block-header'>
               <div className='block-icon'>
@@ -178,17 +227,13 @@ class NewAppointmentPage extends Component {
             </div>
           </div>
 
-
-          <div>
+          <div className='book-block'>
             <div
-              className="button"
-              onClick={() => {
-                /* TODO: submit the data */
-              }}
-            >
-              Book appointment
-            </div>
+              className="book-appointment-button"
+              onClick={this.sendAppointmentRequest}
+            >Book appointment</div>
           </div>
+
         </div>
       </div>
     )
