@@ -20,7 +20,7 @@ class NewAppointmentPage extends Component {
       consultantType: 'gp',
       appointmentType: '',
       userDate: null,
-      notes: ''
+      notes: null
     }
   }
 
@@ -39,29 +39,16 @@ class NewAppointmentPage extends Component {
 
   filterAvailableSlots = () => {
     const { consultantType, availableSlots } = this.state;
-    
-    let filteredSlots = []
-    for (let i = 0; i < availableSlots.length; i++) {
-      for (
-        let j = 0;
-        j < availableSlots[i]['consultantType'].length;
-        j++
-      ) {
-        if (
-          availableSlots[j]['consultantType'][i] ===
-          consultantType
-        ) {
-          filteredSlots.push(availableSlots[j])
-        }
-      }
-    }
+    let filteredSlots = availableSlots.filter(slot => 
+      slot['consultantType'].includes(consultantType)
+    );
 
     if (filteredSlots.length === 0) {
       this.setState({
         filteredSlots,
         appointmentType: '',
         userDate: null,
-        notes: ''
+        notes: null
       })
     } else {
       this.setState({
@@ -71,7 +58,7 @@ class NewAppointmentPage extends Component {
   }
 
   onConsultantTypeChange = consultantType => {
-    this.setState({ consultantType, availableAppointmentTypes: [] }, () => {
+    this.setState({ consultantType, availableAppointmentTypes: [], userDate: null }, () => {
       this.filterAvailableSlots();
     })
   }
@@ -96,7 +83,7 @@ class NewAppointmentPage extends Component {
       alert('Please select a consultant type.');
     } else if (userDate === null) {
       alert('Please select a date for the appointment.');
-    } else if (appointmentType == '') {
+    } else if (appointmentType === '') {
       alert('Please select an appointment type.');
     } else {
       const dataToPost = {
@@ -115,15 +102,21 @@ class NewAppointmentPage extends Component {
         },
         body: JSON.stringify(dataToPost)
       })
-        .then(res=>res.json())
+        .then(res => {
+          if (res.status === 201) {
+            alert("Appointment successfully booked.");
+          } else {
+            alert(res.statusText);
+          }
+          return res.json();
+        })
         .then(json => {
-          console.log(json)
+          // console.log(json)
         })
         .catch(err => {
           console.error(err)
         })
     }
-
   }
 
   translateConsultantType = cType => {
@@ -147,19 +140,17 @@ class NewAppointmentPage extends Component {
 
   render() {
     const { userId, filteredSlots, availableAppointmentTypes } = this.state;
-    const { consultantType, userDate, appointmentType, notes } = this.state;
+    const { consultantType, userDate, appointmentType } = this.state;
 
     const todayDate = new Date();
 
     return (
       <div className='new-appointment-page'>
-
         <h2 className="h6">New appointment</h2>
         <UserInfo userId={userId}/>
         <div className="appointment-form">
-
           <FormSection title='Consultant Type' iconName='stethoscope'>
-          <div className='block-buttons'>
+            <div className='section-button-list'>
               <SelectableButton
                 label='GP'
                 selected={consultantType === 'gp'}
@@ -177,26 +168,25 @@ class NewAppointmentPage extends Component {
               />
             </div>
           </FormSection>
-
           <FormSection title='Date & Time' iconName='clock'>
             {
               filteredSlots.length === 0
               ? (<div className='empty-block'>There are no available dates for the selected consultant type.</div>)
               : (
-                <div className='block-buttons'>
+                <div className='section-button-list'>
                   {filteredSlots.map(slot => {
                     const availDate = new Date(slot.time);
 
-                    let dateLabel = '';
+                    // Determining if the date of the slot is today
+                    let dateLabel = `${availDate.getHours()}:${availDate.getMinutes()}`;
                     if (availDate.getFullYear() === todayDate.getFullYear() &&
                       availDate.getMonth() === todayDate.getMonth() &&
                       availDate.getDate() === todayDate.getDate()
                     ) {
-                      dateLabel += 'Today ';
+                      dateLabel = `Today ${dateLabel}`;
                     } else {
-                      dateLabel += `${availDate.getDate() + 1}/${availDate.getMonth() + 1}/${availDate.getFullYear()}`;
+                      dateLabel = `${availDate.getDate() + 1}/${availDate.getMonth() + 1}/${availDate.getFullYear()} ${dateLabel}`;
                     }
-                    dateLabel += ` ${availDate.getHours()}:${availDate.getMinutes()}`;
 
                     return (
                       <SelectableButton
@@ -211,13 +201,12 @@ class NewAppointmentPage extends Component {
               )
             }
           </FormSection>
-
           <FormSection title='Appointment Type' iconName='video'>
             {
               userDate === null
-              ? (<div className='empty-block'>Please select a Date to see the available appointment types.</div>)
+              ? (<div className='empty-block'>Please select a date to see the available appointment types.</div>)
               : (
-                <div className='block-buttons'>
+                <div className='section-button-list'>
                   {availableAppointmentTypes.map(availType => {
                     return (
                       <SelectableButton
@@ -232,7 +221,6 @@ class NewAppointmentPage extends Component {
               )
             }
           </FormSection>
-
           <FormSection title='Notes' iconName='sticky-note'>
             <div className='textarea-wrapper'>
               <textarea
@@ -241,8 +229,7 @@ class NewAppointmentPage extends Component {
               />
             </div>
           </FormSection>
-
-          <div className='book-block'>
+          <div className='book-section'>
             <div
               className="book-appointment-button"
               onClick={this.sendAppointmentRequest}
@@ -253,7 +240,6 @@ class NewAppointmentPage extends Component {
       </div>
     )
   }
-
 };
 
 export default NewAppointmentPage;

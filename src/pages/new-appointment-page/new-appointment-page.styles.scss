@@ -5,62 +5,33 @@
   h2 {
     &.h6 {
       margin-left: 20px;
-      font-size: 3.5em;
+      font-size: 5vw;
       color: $bold-text-color;
     }
   }
 
   .appointment-form {
-    .form-block {
-      margin: $gutter-size--large * 2;
-      min-height: 80px;
-
-      .block-header {
-        display: flex;
-        color: #000;
-        font-weight: 600;
-        margin-bottom: 20px;
-
-        .block-icon {
-          color: $icon-color;
-          margin-right: 10px;
-        }
-      }
-
-      .block-buttons {
-
-      }
-
-      .textarea-wrapper {
-        width: 80vw;
-        margin: 10px auto;
-        height: 40vh;
-        border-bottom: $border-standard;
-        
-        textarea {
-          width: 100%;
-          height: 20vh;
-          border: 1px solid #bbb;
-          border-radius: 7px;
-        }
-      }
+    .section-button-list {
+      overflow: auto;
+      white-space: nowrap;
+      padding-bottom: 10px;
     }
-
-    .book-block {
-      margin: $gutter-size--large * 2;
+    .book-section {
+      margin: $gutter-size--large * 4;
+      border-top: $border-standard;
+      text-align: center;
+      padding-top: 20px;
       
       .book-appointment-button {
         box-sizing: border-box;
         width: 100%;
         background-color: #2abbba;
         color: #fff;
-        height: 30px;
-        line-height: 30px;
-        margin-right: 12px;
+        height: 50px;
+        line-height: 50px;
         display: inline-block;
         text-align: center;
-        padding: 0 20px;
-        border-radius: 20px;
+        border-radius: 10px;
   
         &:hover {
           cursor: pointer;
