@@ -14,6 +14,7 @@ class NewAppointmentPage extends Component {
     this.state = {
       userId: 1, // TODO
       availableSlots: [],
+      filteredSlots: [],
       availableAppointmentTypes: [],
 
       consultantType: 'gp',
@@ -27,15 +28,52 @@ class NewAppointmentPage extends Component {
     fetch(`${API_ENDPOINT}/availableSlots`)
       .then(res => res.json())
       .then(json => {
-        this.setState({ availableSlots: json })
+        this.setState({ availableSlots: json }, () => {
+          this.filterAvailableSlots();
+        })
       })
       .catch(err => {
         console.error(err)
       })
   }
 
+  filterAvailableSlots = () => {
+    const { consultantType, availableSlots } = this.state;
+    
+    let filteredSlots = []
+    for (let i = 0; i < availableSlots.length; i++) {
+      for (
+        let j = 0;
+        j < availableSlots[i]['consultantType'].length;
+        j++
+      ) {
+        if (
+          availableSlots[j]['consultantType'][i] ===
+          consultantType
+        ) {
+          filteredSlots.push(availableSlots[j])
+        }
+      }
+    }
+
+    if (filteredSlots.length === 0) {
+      this.setState({
+        filteredSlots,
+        appointmentType: '',
+        userDate: null,
+        notes: ''
+      })
+    } else {
+      this.setState({
+        filteredSlots
+      })
+    }
+  }
+
   onConsultantTypeChange = consultantType => {
-    this.setState({ consultantType })
+    this.setState({ consultantType, availableAppointmentTypes: [] }, () => {
+      this.filterAvailableSlots();
+    })
   }
 
   onDateChange = (userDate, availableAppointmentTypes) => {
@@ -53,29 +91,39 @@ class NewAppointmentPage extends Component {
 
   sendAppointmentRequest = event => {
     const { userId, consultantType, appointmentType, userDate, notes } = this.state;
-    const dataToPost = {
-      userId,
-      dateTime: userDate,
-      notes,
-      consultantType: this.translateConsultantType(consultantType),
-      appointmentType
-    };
 
-    fetch(`${API_ENDPOINT}/appointments`, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dataToPost)
-    })
-      .then(res=>res.json())
-      .then(json => {
-        //console.log(json)
+    if (consultantType === '') {
+      alert('Please select a consultant type.');
+    } else if (userDate === null) {
+      alert('Please select a date for the appointment.');
+    } else if (appointmentType == '') {
+      alert('Please select an appointment type.');
+    } else {
+      const dataToPost = {
+        userId,
+        dateTime: userDate,
+        notes,
+        consultantType: this.translateConsultantType(consultantType),
+        appointmentType
+      };
+  
+      fetch(`${API_ENDPOINT}/appointments`, {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToPost)
       })
-      .catch(err => {
-        console.error(err)
-      })
+        .then(res=>res.json())
+        .then(json => {
+          console.log(json)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    }
+
   }
 
   translateConsultantType = cType => {
@@ -98,34 +146,15 @@ class NewAppointmentPage extends Component {
   }
 
   render() {
-    const { availableSlots, availableAppointmentTypes } = this.state;
+    const { filteredSlots, availableAppointmentTypes } = this.state;
     const { consultantType, userDate, appointmentType, notes } = this.state;
-
-    // calculate matching slots
-    let slots = []
-    for (let i = 0; i < availableSlots.length; i++) {
-      for (
-        let j = 0;
-        j < availableSlots[i]['consultantType'].length;
-        j++
-      ) {
-        if (
-          availableSlots[j]['consultantType'][i] ===
-          consultantType
-        ) {
-          slots.push(availableSlots[j])
-        }
-      }
-    }
-
-    console.log(slots);
 
     const todayDate = new Date();
 
     // TODO handle the case when 0 slots are available
     return (
       <div className='new-appointment-page'>
-        
+
         <h2 className="h6">New appointment</h2>
         <UserInfo />
         <div className="appointment-form">
@@ -163,31 +192,37 @@ class NewAppointmentPage extends Component {
               </div>
               Date & Time
             </div>
-            <div className='block-buttons'>
-              {slots.map(slot => {
-                const availDate = new Date(slot.time);
+            {
+              filteredSlots.length === 0
+              ? (<div className='empty-block'>There are no available dates for the selected consultant type.</div>)
+              : (
+                <div className='block-buttons'>
+                  {filteredSlots.map(slot => {
+                    const availDate = new Date(slot.time);
 
-                let dateLabel = '';
-                if (availDate.getFullYear() === todayDate.getFullYear() &&
-                  availDate.getMonth() === todayDate.getMonth() &&
-                  availDate.getDate() === todayDate.getDate()
-                ) {
-                  dateLabel += 'Today ';
-                } else {
-                  dateLabel += `${availDate.getDate() + 1}/${availDate.getMonth() + 1}/${availDate.getFullYear()}`;
-                }
-                dateLabel += ` ${availDate.getHours()}:${availDate.getMinutes()}`;
+                    let dateLabel = '';
+                    if (availDate.getFullYear() === todayDate.getFullYear() &&
+                      availDate.getMonth() === todayDate.getMonth() &&
+                      availDate.getDate() === todayDate.getDate()
+                    ) {
+                      dateLabel += 'Today ';
+                    } else {
+                      dateLabel += `${availDate.getDate() + 1}/${availDate.getMonth() + 1}/${availDate.getFullYear()}`;
+                    }
+                    dateLabel += ` ${availDate.getHours()}:${availDate.getMinutes()}`;
 
-                return (
-                  <SelectableButton
-                    key={slot.id}
-                    label={dateLabel}
-                    selected={userDate === slot.time}
-                    handleSelect={() => this.onDateChange(slot.time, slot.appointmentType)}
-                  />
-                );
-              })}
-            </div>
+                    return (
+                      <SelectableButton
+                        key={slot.id}
+                        label={dateLabel}
+                        selected={userDate === slot.time}
+                        handleSelect={() => this.onDateChange(slot.time, slot.appointmentType)}
+                      />
+                    );
+                  })}
+                </div>
+              )
+            }
           </div>
 
           <div className='form-block'>
@@ -197,19 +232,24 @@ class NewAppointmentPage extends Component {
               </div>
               Appointment Type
             </div>
-            <div className='block-buttons'>
-              {availableAppointmentTypes.map(availType => {
-                console.log(availType);
-                return (
-                  <SelectableButton
-                    key={availType}
-                    label={availType}
-                    selected={appointmentType === availType}
-                    handleSelect={() => this.onAppointmentTypeChange(availType)}
-                  />
-                );
-              })}
-            </div>
+            {
+              userDate === null
+              ? (<div className='empty-block'>Please select a Date to see the available appointment types.</div>)
+              : (
+                <div className='block-buttons'>
+                  {availableAppointmentTypes.map(availType => {
+                    return (
+                      <SelectableButton
+                        key={availType}
+                        label={availType}
+                        selected={appointmentType === availType}
+                        handleSelect={() => this.onAppointmentTypeChange(availType)}
+                      />
+                    );
+                  })}
+                </div>
+              )
+            }
           </div>
 
           <div className='form-block'>

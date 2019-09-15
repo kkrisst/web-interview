@@ -13,6 +13,7 @@
   .appointment-form {
     .form-block {
       margin: $gutter-size--large * 2;
+      min-height: 80px;
 
       .block-header {
         display: flex;
