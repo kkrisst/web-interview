@@ -8,15 +8,11 @@ it('expect to render UserInfo component', () => {
 })
 
 it('componentDidMount fetched corretly', async () => {
+  expect.assertions(3)
   const wrapper = shallow(<UserInfo userId="1" />)
   await wrapper.instance().fetchUserInfo()
   const state = wrapper.instance().state
-  console.log(state)
-})
-
-it('componentDidMount calls fetchUserInfo', async () => {
-  const wrapper = shallow(<UserInfo userId="1" />)
-  await wrapper.instance().componentDidMount()
-  wrapper.update()
-  //expect(wrapper.instance().bar).toBe(100);
+  expect(state.id).toEqual(1)
+  expect(state.firstName).toEqual('Jane')
+  expect(state.lastName).toEqual('Doe')
 })
