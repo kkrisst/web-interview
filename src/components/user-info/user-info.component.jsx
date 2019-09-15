@@ -17,7 +17,7 @@ class UserInfo extends Component {
   }
 
   componentDidMount() {
-    fetch(`${API_ENDPOINT}/users/1`)
+    fetch(`${API_ENDPOINT}/users/${this.props.userId}`)
       .then(res => res.json())
       .then(json => {
         const { id, firstName, lastName, avatar } = json;

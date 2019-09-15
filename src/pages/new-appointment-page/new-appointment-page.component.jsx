@@ -146,7 +146,7 @@ class NewAppointmentPage extends Component {
   }
 
   render() {
-    const { filteredSlots, availableAppointmentTypes } = this.state;
+    const { userId, filteredSlots, availableAppointmentTypes } = this.state;
     const { consultantType, userDate, appointmentType, notes } = this.state;
 
     const todayDate = new Date();
@@ -156,7 +156,7 @@ class NewAppointmentPage extends Component {
       <div className='new-appointment-page'>
 
         <h2 className="h6">New appointment</h2>
-        <UserInfo />
+        <UserInfo userId={userId}/>
         <div className="appointment-form">
 
           <div className='form-block'>
