@@ -46,6 +46,10 @@ class NewAppointmentPage extends Component {
     this.setState({ appointmentType })
   }
 
+  onNotesChange = notes => {
+    this.setState({ notes });
+  }
+
   render() {
     const { availableSlots, availableAppointmentTypes } = this.state;
     const { consultantType, userDate, appointmentType, notes } = this.state;
@@ -159,11 +163,22 @@ class NewAppointmentPage extends Component {
             </div>
           </div>
 
-
-          <div>
-            <strong>Notes</strong>
-            <textarea />
+          <div className='form-block'>
+            <div className='block-header'>
+              <div className='block-icon'>
+                <FontAwesomeIcon icon="video" />
+              </div>
+              Notes
+            </div>
+            <div className='textarea-wrapper'>
+              <textarea
+                placeholder='Describe your symptoms'
+                onChange={(e) => this.onNotesChange(e)}
+              />
+            </div>
           </div>
+
+
           <div>
             <div
               className="button"
