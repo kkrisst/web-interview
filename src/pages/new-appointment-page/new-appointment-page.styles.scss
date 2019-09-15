@@ -1,9 +1,35 @@
 @import '../../constants.scss';
 
-h2 {
-  &.h6 {
-    margin-left: 20px;
-    font-size: 3.5em;
-    color: $bold-text-color;
+.new-appointment-page {
+
+  h2 {
+    &.h6 {
+      margin-left: 20px;
+      font-size: 3.5em;
+      color: $bold-text-color;
+    }
   }
+
+  .appointment-form {
+    .form-block {
+      margin: $gutter-size--large * 2;
+
+      .block-header {
+        display: flex;
+        color: #000;
+        font-weight: 600;
+        margin-bottom: 20px;
+
+        .block-icon {
+          color: $icon-color;
+          margin-right: 10px;
+        }
+      }
+
+      .block-buttons {
+
+      }
+    }
+  }
+
 }

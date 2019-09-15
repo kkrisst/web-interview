@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import UserInfo from '../../components/user-info/user-info.component.jsx';
 import SelectableButton from '../../components/selectable-button/selectable-button.component.jsx';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { API_ENDPOINT } from '../../config'
 import './new-appointment-page.styles.scss';
 
@@ -11,7 +12,7 @@ class NewAppointmentPage extends Component {
     super(props)
 
     this.state = {
-      userId: 1,
+      userId: 1, // TODO
       selectedAppointmentType: 'gp',
       availableSlots: [],
     }
@@ -52,23 +53,38 @@ class NewAppointmentPage extends Component {
 
     console.log(slots);
 
+    const { selectedAppointmentType } = this.state;
+
     return (
       <div className='new-appointment-page'>
         <h2 className="h6">New appointment</h2>
         <UserInfo />
         <div className="appointment-form">
-          <SelectableButton
-            label='GP'
-            handleSelect={() => this.onAppointmentTypeChange('gp')}
-          />
-          <SelectableButton
-            label='Therapist'
-            handleSelect={() => this.onAppointmentTypeChange('Therapist')}
-          />
-          <SelectableButton
-            label='Specialist'
-            handleSelect={() => this.onAppointmentTypeChange('specialist')}
-          />
+          <div className='form-block'>
+            <div className='block-header'>
+              <div className='block-icon'>
+                <FontAwesomeIcon icon="stethoscope" />
+              </div>
+              Consultant Type
+            </div>
+            <div className='block-buttons'>
+              <SelectableButton
+                label='GP'
+                selected={selectedAppointmentType === 'gp'}
+                handleSelect={() => this.onAppointmentTypeChange('gp')}
+              />
+              <SelectableButton
+                label='Therapist'
+                selected={selectedAppointmentType === 'therapist'}
+                handleSelect={() => this.onAppointmentTypeChange('therapist')}
+              />
+              <SelectableButton
+                label='Specialist'
+                selected={selectedAppointmentType === 'specialist'}
+                handleSelect={() => this.onAppointmentTypeChange('specialist')}
+              />
+            </div>
+          </div>
           <div>
             <strong>Appointments</strong>
             {slots.map(slot => (

@@ -1,13 +1,25 @@
 @import '../../constants.scss';
 
 .selectable-button {
-  box-sizing: border-box;
-  padding: 12px;
-  background-color: $primary-dark;
-  color: $secondary-light;
-  width: calc(25% - 12px);
-  height: 42px;
+  background-color: #fff;
+  color: $secondary-dark;
+  height: 30px;
+  line-height: 30px;
   margin-right: 12px;
   display: inline-block;
   text-align: center;
+  border: $border-standard;
+  padding: 0 20px;
+  border-radius: 20px;
+
+  &.selected {
+    border: 1px solid #2abbba;
+    background-color: #2abbba;
+    color: #fff;
+  }
+
+  &:hover {
+    cursor: pointer;
+    border: 1px solid #2abbba;
+  }
 }

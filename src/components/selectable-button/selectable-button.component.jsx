@@ -2,10 +2,10 @@ import React from 'react';
 
 import './selectable-button.styles.scss';
 
-const SelectableButton = ({ label, handleSelect }) => {
+const SelectableButton = ({ label, selected, handleSelect }) => {
   return (
     <div
-      className='selectable-button'
+      className={`selectable-button ${selected ? 'selected' : ''}`}
       onClick={handleSelect}
     >{label}</div>
   );
