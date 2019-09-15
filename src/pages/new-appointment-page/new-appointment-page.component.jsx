@@ -14,6 +14,7 @@ class NewAppointmentPage extends Component {
     this.state = {
       userId: 1, // TODO
       availableSlots: [],
+      availableAppointmentTypes: [],
 
       consultantType: 'gp',
       appointmentType: '',
@@ -37,31 +38,37 @@ class NewAppointmentPage extends Component {
     this.setState({ consultantType })
   }
 
-  onDateChange = userDate => {
-    this.setState({ userDate })
+  onDateChange = (userDate, availableAppointmentTypes) => {
+    this.setState({ userDate, availableAppointmentTypes })
+  }
+  
+  onAppointmentTypeChange = (appointmentType) => {
+    this.setState({ appointmentType })
   }
 
   render() {
+    const { availableSlots, availableAppointmentTypes } = this.state;
+    const { consultantType, userDate, appointmentType, notes } = this.state;
+
     // calculate matching slots
     let slots = []
-    for (let i = 0; i < this.state.availableSlots.length; i++) {
+    for (let i = 0; i < availableSlots.length; i++) {
       for (
         let j = 0;
-        j < this.state.availableSlots[i]['consultantType'].length;
+        j < availableSlots[i]['consultantType'].length;
         j++
       ) {
         if (
-          this.state.availableSlots[j]['consultantType'][i] ===
-          this.state.consultantType
+          availableSlots[j]['consultantType'][i] ===
+          consultantType
         ) {
-          slots.push(this.state.availableSlots[j])
+          slots.push(availableSlots[j])
         }
       }
     }
 
     console.log(slots);
 
-    const { consultantType, userDate, appointmentType, notes } = this.state;
     const todayDate = new Date();
 
     // TODO handle the case when 0 slots are available
@@ -123,17 +130,33 @@ class NewAppointmentPage extends Component {
                     key={slot.id}
                     label={dateLabel}
                     selected={userDate === slot.time}
-                    handleSelect={() => this.onDateChange(slot.time)}
+                    handleSelect={() => this.onDateChange(slot.time, slot.appointmentType)}
                   />
                 );
               })}
             </div>
           </div>
 
-
-          <div>
-            <strong>Appointments</strong>
-            
+          <div className='form-block'>
+            <div className='block-header'>
+              <div className='block-icon'>
+                <FontAwesomeIcon icon="video" />
+              </div>
+              Appointment Type
+            </div>
+            <div className='block-buttons'>
+              {availableAppointmentTypes.map(availType => {
+                console.log(availType);
+                return (
+                  <SelectableButton
+                    key={availType}
+                    label={availType}
+                    selected={appointmentType === availType}
+                    handleSelect={() => this.onAppointmentTypeChange(availType)}
+                  />
+                );
+              })}
+            </div>
           </div>
 
 
