@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-import UserInfo from '../../components/user-info/user-info.component.jsx'
+import UserInfo from '../../components/user-info/user-info.component.jsx';
+import SelectableButton from '../../components/selectable-button/selectable-button.component.jsx';
 
 import { API_ENDPOINT } from '../../config'
 import './new-appointment-page.styles.scss';
@@ -49,36 +50,25 @@ class NewAppointmentPage extends Component {
       }
     }
 
+    console.log(slots);
+
     return (
       <div className='new-appointment-page'>
         <h2 className="h6">New appointment</h2>
         <UserInfo />
         <div className="appointment-form">
-          <div
-            className="button"
-            id="GP-button"
-            onClick={() => this.onAppointmentTypeChange('gp')}
-          >
-            GP
-          </div>
-          <div
-            className="button"
-            onClick={() => this.onAppointmentTypeChange('Therapist')}
-          >
-            Therapist
-          </div>
-          <div
-            className="button"
-            onClick={() => this.onAppointmentTypeChange('Physio')}
-          >
-            Physio
-          </div>
-          <div
-            className="button"
-            onClick={() => this.onAppointmentTypeChange('specialist')}
-          >
-            Specialist
-          </div>
+          <SelectableButton
+            label='GP'
+            handleSelect={() => this.onAppointmentTypeChange('gp')}
+          />
+          <SelectableButton
+            label='Therapist'
+            handleSelect={() => this.onAppointmentTypeChange('Therapist')}
+          />
+          <SelectableButton
+            label='Specialist'
+            handleSelect={() => this.onAppointmentTypeChange('specialist')}
+          />
           <div>
             <strong>Appointments</strong>
             {slots.map(slot => (
