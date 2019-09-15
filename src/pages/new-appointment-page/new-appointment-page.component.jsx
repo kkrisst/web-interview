@@ -13,8 +13,12 @@ class NewAppointmentPage extends Component {
 
     this.state = {
       userId: 1, // TODO
-      selectedAppointmentType: 'gp',
       availableSlots: [],
+
+      consultantType: 'gp',
+      appointmentType: '',
+      userDate: null,
+      notes: ''
     }
   }
 
@@ -29,8 +33,12 @@ class NewAppointmentPage extends Component {
       })
   }
 
-  onAppointmentTypeChange = appointmentType => {
-    this.setState({ selectedAppointmentType: appointmentType })
+  onConsultantTypeChange = consultantType => {
+    this.setState({ consultantType })
+  }
+
+  onDateChange = userDate => {
+    this.setState({ userDate })
   }
 
   render() {
@@ -44,7 +52,7 @@ class NewAppointmentPage extends Component {
       ) {
         if (
           this.state.availableSlots[j]['consultantType'][i] ===
-          this.state.selectedAppointmentType
+          this.state.consultantType
         ) {
           slots.push(this.state.availableSlots[j])
         }
@@ -53,8 +61,10 @@ class NewAppointmentPage extends Component {
 
     console.log(slots);
 
-    const { selectedAppointmentType } = this.state;
+    const { consultantType, userDate, appointmentType, notes } = this.state;
+    const todayDate = new Date();
 
+    // TODO handle the case when 0 slots are available
     return (
       <div className='new-appointment-page'>
         <h2 className="h6">New appointment</h2>
@@ -70,35 +80,63 @@ class NewAppointmentPage extends Component {
             <div className='block-buttons'>
               <SelectableButton
                 label='GP'
-                selected={selectedAppointmentType === 'gp'}
-                handleSelect={() => this.onAppointmentTypeChange('gp')}
+                selected={consultantType === 'gp'}
+                handleSelect={() => this.onConsultantTypeChange('gp')}
               />
               <SelectableButton
                 label='Therapist'
-                selected={selectedAppointmentType === 'therapist'}
-                handleSelect={() => this.onAppointmentTypeChange('therapist')}
+                selected={consultantType === 'therapist'}
+                handleSelect={() => this.onConsultantTypeChange('therapist')}
               />
               <SelectableButton
                 label='Specialist'
-                selected={selectedAppointmentType === 'specialist'}
-                handleSelect={() => this.onAppointmentTypeChange('specialist')}
+                selected={consultantType === 'specialist'}
+                handleSelect={() => this.onConsultantTypeChange('specialist')}
               />
             </div>
           </div>
+
+          <div className='form-block'>
+            <div className='block-header'>
+              <div className='block-icon'>
+                <FontAwesomeIcon icon="clock" />
+              </div>
+              Date & Time
+            </div>
+            <div className='block-buttons'>
+              {slots.map(slot => {
+                const availDate = new Date(slot.time);
+
+                let dateLabel = '';
+                if (availDate.getFullYear() === todayDate.getFullYear() &&
+                  availDate.getMonth() === todayDate.getMonth() &&
+                  availDate.getDate() === todayDate.getDate()
+                ) {
+                  dateLabel += 'Today ';
+                } else {
+                  dateLabel += `${availDate.getDate() + 1}/${availDate.getMonth() + 1}/${availDate.getFullYear()}`;
+                }
+                dateLabel += ` ${availDate.getHours()}:${availDate.getMinutes()}`;
+
+                return (
+                  <SelectableButton
+                    key={slot.id}
+                    label={dateLabel}
+                    selected={userDate === slot.time}
+                    handleSelect={() => this.onDateChange(slot.time)}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+
           <div>
             <strong>Appointments</strong>
-            {slots.map(slot => (
-              <li
-                key={slot.id}
-                className="appointment-button"
-                onClick={() => {
-                  this.setState({ selectedAppointment: slot })
-                }}
-              >
-                {slot.time}
-              </li>
-            ))}
+            
           </div>
+
+
           <div>
             <strong>Notes</strong>
             <textarea />
