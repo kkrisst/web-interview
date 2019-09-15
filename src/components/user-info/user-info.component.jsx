@@ -16,24 +16,43 @@ class UserInfo extends Component {
     }
   }
 
-  componentDidMount() {
-    this.fetchUserInfo();
+  async componentDidMount() {
+    try {
+      if (this.props.userId) {
+        const userData = await this.fetchUserInfo();
+        if (userData !== null) {
+          const { id, firstName, lastName, avatar } = userData;
+          this.setState({
+            id,
+            firstName,
+            lastName,
+            avatar
+          });
+        } else {
+          throw new Error("Fetching user data failed.");
+        }
+      }  
+    } catch (error) {
+      console.error(error);
+    }
+    
   }
 
   fetchUserInfo = () => {
     return fetch(`${API_ENDPOINT}/users/${this.props.userId}`)
-      .then(res => res.json())
+      .then(res => {
+          if (!res.ok) {
+            throw Error(res.statusText);
+          } else {
+            return res.json();
+          }
+        })
       .then(json => {
-        const { id, firstName, lastName, avatar } = json;
-        this.setState({
-          id,
-          firstName,
-          lastName,
-          avatar
-        });
+        return json;
       })
       .catch(err => {
         console.error(err);
+        return null;
       })
   }
 
