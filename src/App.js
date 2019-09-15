@@ -55,7 +55,7 @@ class App extends Component {
         <Header />
         <h2 className="h6">New appointment</h2>
         <UserInfo />
-        <div style={{ maxWidth: 600, margin: '24px auto' }}>
+        <div className="appointment-form">
           <div
             className="button"
             id="GP-button"
