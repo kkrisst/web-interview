@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { API_ENDPOINT } from '../../config'
+import { API_ENDPOINT } from '../../config';
 
 import './user-info.styles.scss';
 
@@ -17,7 +17,11 @@ class UserInfo extends Component {
   }
 
   componentDidMount() {
-    fetch(`${API_ENDPOINT}/users/${this.props.userId}`)
+    this.fetchUserInfo();
+  }
+
+  fetchUserInfo = () => {
+    return fetch(`${API_ENDPOINT}/users/${this.props.userId}`)
       .then(res => res.json())
       .then(json => {
         const { id, firstName, lastName, avatar } = json;
