@@ -5,6 +5,7 @@ import SelectableButton from './selectable-button.component.jsx'
 
 describe('Testing the SelectableButton component', () => {
   let wrapper
+
   beforeEach(() => {
     const props = {
       label: 'GP',
@@ -12,6 +13,10 @@ describe('Testing the SelectableButton component', () => {
       handleSelect: null,
     }
     wrapper = shallow(<SelectableButton {...props} />)
+  })
+
+  it('expect SelectableButton to be defined', () => {
+    expect(SelectableButton).toBeDefined()
   })
 
   it('expect to render SelectableButton component', () => {
