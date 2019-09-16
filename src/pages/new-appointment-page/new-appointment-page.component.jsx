@@ -20,20 +20,41 @@ class NewAppointmentPage extends Component {
       consultantType: 'gp',
       appointmentType: '',
       userDate: null,
-      notes: null
+      notes: null,
+      allRequiredSet: false
     }
   }
 
-  componentDidMount() {
-    fetch(`${API_ENDPOINT}/availableSlots`)
-      .then(res => res.json())
-      .then(json => {
-        this.setState({ availableSlots: json }, () => {
+  async componentDidMount() {
+    try {
+      const availableSlots = await this.fetchAvailableSlots();
+      if (availableSlots !== null) {
+        this.setState({ availableSlots }, () => {
           this.filterAvailableSlots();
         })
+      } else {
+        throw new Error("Fetching the available slots failed.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  fetchAvailableSlots = () => {
+    return fetch(`${API_ENDPOINT}/availableSlots`)
+      .then(res => {
+          if (!res.ok) {
+            throw Error(res.statusText);
+          } else {
+            return res.json();
+          }
+        })
+      .then(json => {
+        return json;
       })
       .catch(err => {
-        console.error(err)
+        console.error(err);
+        return null;
       })
   }
 
@@ -48,7 +69,8 @@ class NewAppointmentPage extends Component {
         filteredSlots,
         appointmentType: '',
         userDate: null,
-        notes: null
+        notes: null,
+        allRequiredSet: false
       })
     } else {
       this.setState({
@@ -76,7 +98,7 @@ class NewAppointmentPage extends Component {
     this.setState({ notes });
   }
 
-  sendAppointmentRequest = event => {
+  setAppointmentRequest = event => {
     const { userId, consultantType, appointmentType, userDate, notes } = this.state;
 
     if (consultantType === '') {
@@ -86,6 +108,9 @@ class NewAppointmentPage extends Component {
     } else if (appointmentType === '') {
       alert('Please select an appointment type.');
     } else {
+      this.setState({
+        allRequiredSet: true
+      });
       const dataToPost = {
         userId,
         dateTime: userDate,
@@ -94,29 +119,33 @@ class NewAppointmentPage extends Component {
         appointmentType
       };
   
-      fetch(`${API_ENDPOINT}/appointments`, {
-        method: 'post',
-        headers: {
-          'Accept': 'application/json, text/plain, */*',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataToPost)
-      })
-        .then(res => {
-          if (res.status === 201) {
-            alert("Appointment successfully booked.");
-          } else {
-            alert(res.statusText);
-          }
-          return res.json();
-        })
-        .then(json => {
-          // console.log(json)
-        })
-        .catch(err => {
-          console.error(err)
-        })
+      this.postAppointmentData(dataToPost);
     }
+  }
+
+  postAppointmentData = dataToPost => {
+    fetch(`${API_ENDPOINT}/appointments`, {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataToPost)
+    })
+      .then(res => {
+        if (res.status === 201) {
+          alert("Appointment successfully booked.");
+        } else {
+          alert(res.statusText);
+        }
+        return res.json();
+      })
+      .then(json => {
+        // console.log(json)
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 
   translateConsultantType = cType => {
@@ -149,7 +178,7 @@ class NewAppointmentPage extends Component {
         <h2 className="h6">New appointment</h2>
         <UserInfo userId={userId}/>
         <div className="appointment-form">
-          <FormSection title='Consultant Type' iconName='stethoscope'>
+          <FormSection id='consultant-type' title='Consultant Type' iconName='stethoscope'>
             <div className='section-button-list'>
               <SelectableButton
                 label='GP'
@@ -168,7 +197,7 @@ class NewAppointmentPage extends Component {
               />
             </div>
           </FormSection>
-          <FormSection title='Date & Time' iconName='clock'>
+          <FormSection id='date-time' title='Date & Time' iconName='clock'>
             {
               filteredSlots.length === 0
               ? (<div className='empty-block'>There are no available dates for the selected consultant type.</div>)
@@ -201,7 +230,7 @@ class NewAppointmentPage extends Component {
               )
             }
           </FormSection>
-          <FormSection title='Appointment Type' iconName='video'>
+          <FormSection id='appointment-type' title='Appointment Type' iconName='video'>
             {
               userDate === null
               ? (<div className='empty-block'>Please select a date to see the available appointment types.</div>)
@@ -221,7 +250,7 @@ class NewAppointmentPage extends Component {
               )
             }
           </FormSection>
-          <FormSection title='Notes' iconName='sticky-note'>
+          <FormSection id='notes' title='Notes' iconName='sticky-note'>
             <div className='textarea-wrapper'>
               <textarea
                 placeholder='Describe your symptoms'
@@ -232,7 +261,7 @@ class NewAppointmentPage extends Component {
           <div className='book-section'>
             <div
               className="book-appointment-button"
-              onClick={this.sendAppointmentRequest}
+              onClick={this.setAppointmentRequest}
             >Book appointment</div>
           </div>
 
